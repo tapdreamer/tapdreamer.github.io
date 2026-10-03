@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TAPDreamer · Transferable Adversarial Patches for World Action Models</title>
+<meta name="description" content="TAPDreamer constructs transferable adversarial patches using a public visual encoder, without target-policy queries. Explore the method, demonstrations, and experimental results.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><a class="brand" href="#">TAP<span>Dreamer</span></a><nav aria-label="Main navigation"><a href="#demo">Demo</a><a href="#method">Method</a><a href="#results">Results</a><a href="#analysis">Analysis</a></nav></header>
+<main>
+<section class="hero wrap">
+<p class="eyebrow">WORLD ACTION MODEL SECURITY</p>
+<h1>TAP<span>Dreamer</span></h1>
+<h2>Transferable Adversarial Patches<br>for World Action Models</h2>
+<p class="lead">A small, fixed patch. A frozen visual encoder.<br>Disrupted actions across tasks and models.</p>
+<div class="links"><span class="button unavailable">Paper <small>Coming soon</small></span><a class="button dark" href="https://github.com/uw-nsl/TAPDreamer">Code</a><a class="button" href="#demo">Watch demo</a></div>
+<div class="takeaway"><span>TL;DR</span><p>Optimized on observations from <strong>one source task</strong>, a local patch transfers across World Action Models using only a public visual encoder—<strong>no target-policy queries</strong>.</p></div>
+<figure class="teaser"><a href="assets/overview.svg" target="_blank" rel="noopener" aria-label="Open overview figure at full size"><img src="assets/overview.svg" width="1188" height="522" alt="Optimize a patch with a public encoder, then reuse it for drawer opening, pot placement, and bowl placement across FastWAM, Motus, and DreamWAM."></a><figcaption>Optimize once. Freeze the patch. Reuse it across tasks and models within each benchmark.</figcaption></figure>
+<div class="stats"><div><strong>~6.5<span>%</span></strong><p>of the visual input</p></div><div><strong>90</strong><p>tasks across two benchmarks</p></div><div><strong>0<span>%</span></strong><p>FastWAM success under attack</p></div></div>
+</section>
+<section class="section tinted" id="demo"><div class="wrap">
+<div class="section-title"><p class="eyebrow">CLOSED-LOOP EXECUTION</p><h2>From the model’s point of view</h2><p>Pick up the book and place it in the back compartment.</p></div>
+<div class="videos"><figure><div class="video-label"><span class="swatch clean"></span>Clean</div><video id="clean-video" controls muted playsinline preload="metadata" aria-label="Clean model-view demonstration"><source src="assets/clean.mp4" type="video/mp4"></video></figure><figure><div class="video-label"><span class="swatch attack"></span>TAPDreamer</div><video id="attack-video" controls muted playsinline preload="metadata" aria-label="TAPDreamer model-view demonstration"><source src="assets/tapdreamer.mp4" type="video/mp4"></video></figure></div>
+<div class="video-tools"><button id="play-both" type="button">Play both</button><button id="replay-both" type="button">Replay both</button><span id="video-status" role="status" aria-live="polite"></span></div>
+<p class="caption">External camera on the left; wrist camera on the right. The patch stays in the upper-left corner of the external view. Clips retain their original playback speed and duration.</p>
+</div></section>
+<section class="section wrap narrow" id="abstract"><p class="eyebrow">ABSTRACT</p><h2>Attacking the shared visual interface</h2>
+<p>World Action Models (WAMs) rely on camera inputs to build representations for prediction and control. TAPDreamer is a transferable, fixed local patch whose pixel optimization uses only a public visual encoder and requires no target-policy queries. It maximizes the mean L1 distance between clean and patched encoder outputs over all latent positions and channels.</p>
+<p>One frozen patch per benchmark, covering about 6.5% of the input, reduces FastWAM’s success rate from 97.65% to 0.00% across 40 LIBERO tasks and from 90.86% to 0.00% across 50 RoboTwin tasks. Matched random patches retain 81.45% and 79.20% success. The same patches also transfer to DreamWAM and Motus.</p>
+<p>Mechanism analysis connects these failures to attention-mediated spatial spreading and a shared representation shift across observations. The results highlight the need to secure the visual encoders shared by downstream world and action models.</p>
+</section>
+<section class="section wrap" id="method"><div class="section-title"><p class="eyebrow">METHOD</p><h2>Optimize locally. Transfer broadly.</h2><p>Patch construction uses the encoder alone. Deployment keeps the patch fixed.</p></div>
+<figure class="paper-figure"><a href="assets/method.svg" target="_blank" rel="noopener" aria-label="Open method figure at full size"><img src="assets/method.svg" width="1188" height="393" loading="lazy" alt="Offline patch construction through a frozen visual encoder, followed by fixed-patch deployment in a closed-loop WAM."></a><figcaption>Pixel updates maximize latent displacement through the frozen encoder; the resulting patch is reused at every observation step.</figcaption></figure>
+<div class="steps"><article><span>01 / CONSTRUCT</span><h3>One source task</h3><p>Use a small set of demonstration frames to optimize patch pixels with Adam while keeping encoder weights frozen.</p></article><article><span>02 / FREEZE</span><h3>One patch per benchmark</h3><p>Keep the optimized content, area, and position unchanged across observations and tasks.</p></article><article><span>03 / TRANSFER</span><h3>No policy reoptimization</h3><p>Apply the same patch to other downstream WAM architectures within the benchmark.</p></article></div>
+</section>
+<section class="section tinted" id="results"><div class="wrap"><div class="section-title"><p class="eyebrow">EXPERIMENTS</p><h2>A small patch, a large drop in success</h2><p>Closed-loop task success rate (%). Lower success means a stronger attack.</p></div>
+<div class="legend"><span><i class="swatch clean"></i>Clean</span><span><i class="swatch random"></i>Random patch</span><span><i class="swatch attack"></i>TAPDreamer</span></div>
+<div class="charts"><article class="chart"><h3>LIBERO <small>FastWAM · 40 tasks</small></h3><div class="bar-row"><span>Clean</span><div class="track"><i class="clean" style="width:97.65%"></i></div><b>97.65</b></div><div class="bar-row"><span>Random</span><div class="track"><i class="random" style="width:81.45%"></i></div><b>81.45</b></div><div class="bar-row"><span>TAPDreamer</span><div class="track zero"></div><b class="red">0.00</b></div></article><article class="chart"><h3>RoboTwin <small>FastWAM · 50 tasks</small></h3><div class="bar-row"><span>Clean</span><div class="track"><i class="clean" style="width:90.86%"></i></div><b>90.86</b></div><div class="bar-row"><span>Random</span><div class="track"><i class="random" style="width:79.20%"></i></div><b>79.20</b></div><div class="bar-row"><span>TAPDreamer</span><div class="track zero"></div><b class="red">0.00</b></div></article></div>
+<p class="caption">LIBERO: 50 trials per task. RoboTwin: 100 trials per task. The random patch matches patch position and area. Results from Table 1.</p>
+<h3 class="table-heading">The same frozen patches transfer to other WAMs</h3>
+<div class="table-scroll"><table><caption>Cross-model transfer · overall success rate (%) · Table 2</caption><thead><tr><th scope="col">Benchmark</th><th scope="col">Victim model</th><th scope="col">Clean</th><th scope="col">Random</th><th scope="col">TAPDreamer</th></tr></thead><tbody><tr><td>LIBERO</td><th scope="row">DreamWAM-uncond</th><td>97.50</td><td>84.55</td><td class="result">1.45</td></tr><tr><td>LIBERO</td><th scope="row">DreamWAM-joint</th><td>97.70</td><td>86.10</td><td class="result">1.00</td></tr><tr><td>RoboTwin</td><th scope="row">Motus</th><td>86.62</td><td>82.40</td><td class="result">10.60</td></tr></tbody></table></div>
+<p class="caption">Transfer is evaluated within each benchmark without target-model feedback for reoptimization.</p>
+</div></section>
+<section class="section wrap" id="analysis"><div class="section-title"><p class="eyebrow">MECHANISM</p><h2>How does a local patch affect the whole scene?</h2><p>Spatial broadcasting inside the encoder. Consistent shifts across observations.</p></div>
+<figure class="paper-figure"><a href="assets/mechanism.svg" target="_blank" rel="noopener" aria-label="Open mechanism figure at full size"><img src="assets/mechanism.svg" width="1188" height="453" loading="lazy" alt="Bottleneck attention spreads the local patch change across the final latent, with a common shift direction across observations."></a><figcaption>A local change spreads through bottleneck attention and persists as a shared component across observation-dependent latent shifts.</figcaption></figure>
+<div class="findings"><article><strong>79.4<span>%</span></strong><h3>Beyond the patch footprint</h3><p>Median fraction of squared final-latent change outside the patch footprint, versus 1.3% for a matched random patch (48 states; Table 3).</p></article><article><strong>0.981</strong><h3>Agreement across observations</h3><p>Median cosine similarity between held-out latent changes and a source-task template, versus 0.716 for the random patch (Table 4).</p></article></div>
+<figure class="paper-figure restoration"><a href="assets/restoration.svg" target="_blank" rel="noopener" aria-label="Open restoration figure at full size"><img src="assets/restoration.svg" width="1194" height="261" loading="lazy" alt="Latent change spreads beyond the patch; restoring clean attention weights or values suppresses this spread."></a><figcaption>Restoring clean attention weights or values substantially suppresses the change outside the patch footprint (Figure 4).</figcaption></figure>
+</section>
+<footer><div class="wrap"><a class="brand" href="#">TAP<span>Dreamer</span></a><p>Transferable Adversarial Patches for World Action Models</p></div></footer>
+</main><script src="script.js"></script>
+</body></html>
