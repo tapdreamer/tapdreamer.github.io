@@ -14,7 +14,7 @@
 <h1>TAP<span>Dreamer</span></h1>
 <h2>Transferable Adversarial Patches<br>for World Action Models</h2>
 <p class="lead">A small, fixed patch. A frozen visual encoder.<br>Disrupted actions across tasks and models.</p>
-<div class="links"><span class="button unavailable">Paper <small>Coming soon</small></span><a class="button dark" href="https://github.com/uw-nsl/TAPDreamer">Code</a><a class="button" href="#demo">Watch demo</a></div>
+<div class="links"><a class="button dark" href="https://arxiv.org/abs/2610.06814">Paper</a><span class="button unavailable">Code <small>Coming soon</small></span><a class="button" href="#demo">Watch demo</a></div>
 <div class="takeaway"><span>TL;DR</span><p>Optimized on observations from <strong>one source task</strong>, a local patch transfers across World Action Models using only a public visual encoder—<strong>no target-policy queries</strong>.</p></div>
 <figure class="teaser"><a href="assets/overview.svg" target="_blank" rel="noopener" aria-label="Open overview figure at full size"><img src="assets/overview.svg" width="1188" height="522" alt="Optimize a patch with a public encoder, then reuse it for drawer opening, pot placement, and bowl placement across FastWAM, Motus, and DreamWAM."></a><figcaption>Optimize once. Freeze the patch. Reuse it across tasks and models within each benchmark.</figcaption></figure>
 <div class="stats"><div><strong>~6.5<span>%</span></strong><p>of the visual input</p></div><div><strong>90</strong><p>tasks across two benchmarks</p></div><div><strong>0<span>%</span></strong><p>FastWAM success under attack</p></div></div>
