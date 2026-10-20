@@ -1,4 +1,4 @@
-const videos = [...document.querySelectorAll('video')];
+const videos = [...document.querySelectorAll('#demo video')];
 const playButton = document.querySelector('#play-both');
 const status = document.querySelector('#video-status');
 function updateLabel() {
@@ -19,3 +19,14 @@ document.querySelector('#replay-both').addEventListener('click', () => {
   playBoth();
 });
 videos.forEach(v => ['play', 'pause', 'ended'].forEach(event => v.addEventListener(event, updateLabel)));
+
+const placement = document.querySelector('#physical-placement');
+placement.addEventListener('change', () => {
+  for (const condition of ['white', 'attack']) {
+    const video = document.querySelector(`#physical-${condition}`);
+    video.pause();
+    video.poster = `assets/physical/${placement.value}-${condition}.jpg`;
+    video.src = `assets/physical/${placement.value}-${condition}.mp4`;
+    video.load();
+  }
+});

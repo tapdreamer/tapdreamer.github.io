@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top"><a class="brand" href="#">TAP<span>Dreamer</span></a><nav aria-label="Main navigation"><a href="#demo">Demo</a><a href="#method">Method</a><a href="#results">Results</a><a href="#analysis">Analysis</a></nav></header>
+<header class="top"><a class="brand" href="#">TAP<span>Dreamer</span></a><nav aria-label="Main navigation"><a href="#demo">Simulation</a><a href="#method">Method</a><a href="#results">Results</a><a href="#physical">Real world</a><a href="#analysis">Analysis</a></nav></header>
 <main>
 <section class="hero wrap">
 <p class="eyebrow">WORLD ACTION MODEL SECURITY</p>
@@ -19,6 +19,7 @@
 <figure class="teaser"><a href="assets/overview.svg" target="_blank" rel="noopener" aria-label="Open overview figure at full size"><img src="assets/overview.svg" width="1188" height="522" alt="Optimize a patch with a public encoder, then reuse it for drawer opening, pot placement, and bowl placement across FastWAM, Motus, and DreamWAM."></a><figcaption>Optimize once. Freeze the patch. Reuse it across tasks and models within each benchmark.</figcaption></figure>
 <div class="stats"><div><strong>~6.5<span>%</span></strong><p>of the visual input</p></div><div><strong>90</strong><p>tasks across two benchmarks</p></div><div><strong>0<span>%</span></strong><p>FastWAM success under attack</p></div></div>
 </section>
+
 <section class="section tinted" id="demo"><div class="wrap">
 <div class="section-title"><p class="eyebrow">CLOSED-LOOP EXECUTION</p><h2>From the model’s point of view</h2><p>Pick up the book and place it in the back compartment.</p></div>
 <div class="videos"><figure><div class="video-label"><span class="swatch clean"></span>Clean</div><video id="clean-video" controls muted playsinline preload="metadata" aria-label="Clean model-view demonstration"><source src="assets/clean.mp4" type="video/mp4"></video></figure><figure><div class="video-label"><span class="swatch attack"></span>TAPDreamer</div><video id="attack-video" controls muted playsinline preload="metadata" aria-label="TAPDreamer model-view demonstration"><source src="assets/tapdreamer.mp4" type="video/mp4"></video></figure></div>
@@ -27,7 +28,7 @@
 </div></section>
 <section class="section wrap narrow" id="abstract"><p class="eyebrow">ABSTRACT</p><h2>Attacking the shared visual interface</h2>
 <p>World Action Models (WAMs) rely on camera inputs to build representations for prediction and control. TAPDreamer is a transferable, fixed local patch whose pixel optimization uses only a public visual encoder and requires no target-policy queries. It maximizes the mean L1 distance between clean and patched encoder outputs over all latent positions and channels.</p>
-<p>One frozen patch per benchmark, covering about 6.5% of the input, reduces FastWAM’s success rate from 97.65% to 0.00% across 40 LIBERO tasks and from 90.86% to 0.00% across 50 RoboTwin tasks. Matched random patches retain 81.45% and 79.20% success. The same patches also transfer to DreamWAM and Motus.</p>
+<p>One frozen patch per benchmark, covering about 6.5% of the input, reduces FastWAM’s success rate from 97.65% to 0.00% across 40 LIBERO tasks and from 90.86% to 0.00% across 50 RoboTwin tasks. Matched random patches retain 81.45% and 79.20% success. The same patches also transfer to DreamWAM and Motus. On a physical SO-101 robot, TAPDreamer reduces FastWAM’s success from 92% to 0% and DreamWAM’s from 80% to 20%.</p>
 <p>Mechanism analysis connects these failures to attention-mediated spatial spreading and a shared representation shift across observations. The results highlight the need to secure the visual encoders shared by downstream world and action models.</p>
 </section>
 <section class="section wrap" id="method"><div class="section-title"><p class="eyebrow">METHOD</p><h2>Optimize locally. Transfer broadly.</h2><p>Patch construction uses the encoder alone. Deployment keeps the patch fixed.</p></div>
@@ -41,6 +42,21 @@
 <h3 class="table-heading">The same frozen patches transfer to other WAMs</h3>
 <div class="table-scroll"><table><caption>Cross-model transfer · overall success rate (%) · Table 2</caption><thead><tr><th scope="col">Benchmark</th><th scope="col">Victim model</th><th scope="col">Clean</th><th scope="col">Random</th><th scope="col">TAPDreamer</th></tr></thead><tbody><tr><td>LIBERO</td><th scope="row">DreamWAM-uncond</th><td>97.50</td><td>84.55</td><td class="result">1.45</td></tr><tr><td>LIBERO</td><th scope="row">DreamWAM-joint</th><td>97.70</td><td>86.10</td><td class="result">1.00</td></tr><tr><td>RoboTwin</td><th scope="row">Motus</th><td>86.62</td><td>82.40</td><td class="result">10.60</td></tr></tbody></table></div>
 <p class="caption">Transfer is evaluated within each benchmark without target-model feedback for reoptimization.</p>
+</div></section>
+<section class="section tinted" id="physical"><div class="wrap">
+<div class="section-title"><p class="eyebrow">REAL-WORLD DEPLOYMENT</p><h2>From simulation to a physical robot</h2><p>SO-101 · “Pick up the banana and place it in the bowl.”</p></div>
+<div class="physical-results charts">
+<article class="chart"><h3>FastWAM <small>Physical task success · 50 trials per condition</small></h3><div class="bar-row"><span>Clean</span><div class="track"><i class="clean" style="width:92%"></i></div><b>92%</b></div><div class="bar-row"><span>TAPDreamer</span><div class="track zero"></div><b class="red">0%</b></div></article>
+<article class="chart"><h3>DreamWAM <small>Direct patch transfer · 50 trials per condition</small></h3><div class="bar-row"><span>Clean</span><div class="track"><i class="clean" style="width:80%"></i></div><b>80%</b></div><div class="bar-row"><span>TAPDreamer</span><div class="track"><i class="attack" style="width:20%"></i></div><b class="red">20%</b></div></article>
+</div>
+<h3 class="table-heading">FastWAM on SO-101</h3>
+<div class="placement-picker"><label for="physical-placement">Patch placement</label><select id="physical-placement"><option value="center">Behind the bowl</option><option value="front">Foreground</option><option value="right">Beside the banana</option></select></div>
+<div class="videos physical-videos">
+<figure><div class="video-label"><span class="swatch clean"></span>Clean</div><video controls muted playsinline preload="none" poster="assets/physical/clean.jpg" aria-label="Physical FastWAM clean demonstration" src="assets/physical/clean.mp4"></video></figure>
+<figure><div class="video-label"><span class="swatch random"></span>Same-size white patch</div><video id="physical-white" controls muted playsinline preload="none" poster="assets/physical/center-white.jpg" aria-label="Physical FastWAM white patch demonstration" src="assets/physical/center-white.mp4"></video></figure>
+<figure><div class="video-label"><span class="swatch attack"></span>TAPDreamer</div><video id="physical-attack" controls muted playsinline preload="none" poster="assets/physical/center-attack.jpg" aria-label="Physical FastWAM TAPDreamer demonstration" src="assets/physical/center-attack.mp4"></video></figure>
+</div>
+
 </div></section>
 <section class="section wrap" id="analysis"><div class="section-title"><p class="eyebrow">MECHANISM</p><h2>How does a local patch affect the whole scene?</h2><p>Spatial broadcasting inside the encoder. Consistent shifts across observations.</p></div>
 <figure class="paper-figure"><a href="assets/mechanism.svg" target="_blank" rel="noopener" aria-label="Open mechanism figure at full size"><img src="assets/mechanism.svg" width="1188" height="453" loading="lazy" alt="Bottleneck attention spreads the local patch change across the final latent, with a common shift direction across observations."></a><figcaption>A local change spreads through bottleneck attention and persists as a shared component across observation-dependent latent shifts.</figcaption></figure>
